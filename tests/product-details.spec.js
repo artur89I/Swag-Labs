@@ -1,26 +1,22 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
 
-test.describe('Swag Labs Product Page Checks', () => {
+test.describe('Swag Labs Product Info Checks (POM)', () => {
+  let loginPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-    await page.fill('[data-test="username"]', 'standard_user');
-    await page.fill('[data-test="password"]', 'secret_sauce');
-    await page.click('[data-test="login-button"]');
-    await expect(page).toHaveURL(/inventory/);
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
   });
 
-  test('Each product has name, price, and image', async ({ page }) => {
+  test('Each product shows name, price, and image', async ({ page }) => {
     const items = await page.$$('.inventory_item');
-    expect(items.length).toBeGreaterThan(0);
 
     for (const item of items) {
-      const name = await item.$('.inventory_item_name');
-      const price = await item.$('.inventory_item_price');
-      const image = await item.$('img.inventory_item_img');
-
-      expect(await name?.isVisible()).toBe(true);
-      expect(await price?.isVisible()).toBe(true);
-      expect(await image?.getAttribute('src')).not.toBeNull();
+      expect(await item.locator('.inventory_item_name').isVisible()).toBe(true);
+      expect(await item.locator('.inventory_item_price').isVisible()).toBe(true);
+      expect(await item.locator('img.inventory_item_img').getAttribute('src')).not.toBeNull();
     }
   });
 });

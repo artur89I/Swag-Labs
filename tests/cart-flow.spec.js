@@ -1,37 +1,35 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
 
-test.describe('Swag Labs Shopping Cart Flow', () => {
+test.describe('Swag Labs Cart Flow (POM)', () => {
+  let loginPage, inventoryPage, cartPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-    await page.fill('[data-test="username"]', 'standard_user');
-    await page.fill('[data-test="password"]', 'secret_sauce');
-    await page.click('[data-test="login-button"]');
-    await expect(page).toHaveURL(/inventory/);
+    loginPage = new LoginPage(page);
+    inventoryPage = new InventoryPage(page);
+    cartPage = new CartPage(page);
+
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
   });
 
   test('Add a random item to the cart', async ({ page }) => {
-    const addButtons = await page.$$('[data-test^="add-to-cart"]');
-    const randomIndex = Math.floor(Math.random() * addButtons.length);
-    await addButtons[randomIndex].click();
+    const buttons = await page.$$('[data-test^="add-to-cart"]');
+    await buttons[Math.floor(Math.random() * buttons.length)].click();
 
-    await page.click('.shopping_cart_link');
+    await inventoryPage.goToCart();
     const cartItems = await page.$$('.cart_item');
     expect(cartItems.length).toBe(1);
   });
 
-  test('Add all items, then remove all but one', async ({ page }) => {
-    const addButtons = await page.$$('[data-test^="add-to-cart"]');
-    for (const btn of addButtons) {
-      await btn.click();
-    }
+  test('Add all items, remove all but one', async ({ page }) => {
+    await inventoryPage.addAllItems();
+    await inventoryPage.goToCart();
+    await cartPage.removeAllButOne();
 
-    await page.click('.shopping_cart_link');
-    const removeButtons = await page.$$('[data-test^="remove"]');
-    for (let i = 0; i < removeButtons.length - 1; i++) {
-      await removeButtons[i].click();
-    }
-
-    const remainingItems = await page.$$('.cart_item');
-    expect(remainingItems.length).toBe(1);
+    const remaining = await page.$$('.cart_item');
+    expect(remaining.length).toBe(1);
   });
 });

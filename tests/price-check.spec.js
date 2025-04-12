@@ -1,44 +1,42 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
+import { CheckoutPage } from '../pages/CheckoutPage';
+import { CheckoutOverviewPage } from '../pages/CheckoutOverviewPage';
 
-test.describe('Swag Labs Price Calculation Check', () => {
+test.describe('Swag Labs Price Validation (POM)', () => {
+  let loginPage, inventoryPage, cartPage, checkoutPage, overviewPage;
+
   test.beforeEach(async ({ page }) => {
-    // Login
-    await page.goto('https://www.saucedemo.com/');
-    await page.fill('[data-test="username"]', 'standard_user');
-    await page.fill('[data-test="password"]', 'secret_sauce');
-    await page.click('[data-test="login-button"]');
+    loginPage = new LoginPage(page);
+    inventoryPage = new InventoryPage(page);
+    cartPage = new CartPage(page);
+    checkoutPage = new CheckoutPage(page);
+    overviewPage = new CheckoutOverviewPage(page);
 
-    // Add multiple items
-    await page.click('[data-test="add-to-cart-sauce-labs-backpack"]');
-    await page.click('[data-test="add-to-cart-sauce-labs-bike-light"]');
-    await page.click('.shopping_cart_link');
-    await page.click('[data-test="checkout"]');
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
+    await inventoryPage.addItemByName('Sauce Labs Backpack');
+    await inventoryPage.addItemByName('Sauce Labs Bike Light');
+    await inventoryPage.goToCart();
+    await cartPage.checkout();
 
-    // Fill form
-    await page.fill('[data-test="firstName"]', 'Natasha');
-    await page.fill('[data-test="lastName"]', 'Bag');
-    await page.fill('[data-test="postalCode"]', '12345');
-    await page.click('[data-test="continue"]');
+    await checkoutPage.fillDetails('Artur', 'Bag', '12345');
+    await checkoutPage.continue();
   });
 
-  test('Validate item total, tax, and final total', async ({ page }) => {
-    // Extract item prices
+  test('Item total, tax, and final total are correct', async ({ page }) => {
     const prices = await page.$$eval('.inventory_item_price', els =>
       els.map(el => parseFloat(el.textContent.replace('$', '')))
     );
-    const itemTotal = prices.reduce((acc, price) => acc + price, 0);
+    const itemTotal = prices.reduce((sum, p) => sum + p, 0);
 
-    // Get displayed totals
-    const displayedItemTotalText = await page.locator('.summary_subtotal_label').textContent();
-    const displayedTaxText = await page.locator('.summary_tax_label').textContent();
-    const displayedTotalText = await page.locator('.summary_total_label').textContent();
+    const subtotal = parseFloat((await overviewPage.subtotal.textContent()).replace('Item total: $', ''));
+    const tax = parseFloat((await overviewPage.tax.textContent()).replace('Tax: $', ''));
+    const total = parseFloat((await overviewPage.total.textContent()).replace('Total: $', ''));
 
-    const displayedItemTotal = parseFloat(displayedItemTotalText.replace('Item total: $', ''));
-    const displayedTax = parseFloat(displayedTaxText.replace('Tax: $', ''));
-    const displayedTotal = parseFloat(displayedTotalText.replace('Total: $', ''));
-
-    // Assertions
-    expect(displayedItemTotal).toBeCloseTo(itemTotal, 2);
-    expect(displayedTotal).toBeCloseTo(itemTotal + displayedTax, 2);
+    expect(subtotal).toBeCloseTo(itemTotal, 2);
+    expect(total).toBeCloseTo(subtotal + tax, 2);
   });
 });
