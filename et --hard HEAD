@@ -1,0 +1,52 @@
+[1mdiff --cc README.md[m
+[1mindex cb42e18,709b9d4..0000000[m
+[1m--- a/README.md[m
+[1m+++ b/README.md[m
+[36m@@@ -1,10 -1,10 +1,18 @@@[m
+[32m++<<<<<<< HEAD[m
+[32m +Swag Labs Store - Playwright JavaScript Project 👩🏻‍💻[m
+[32m++=======[m
+[32m+ # Swag Labs Store - Playwright JavaScript Project 👩🏻‍💻[m
+[32m++>>>>>>> 6b1ae1c (Update test files and documentation)[m
+  [m
+  This project is designed to test functionalities of the Swag Labs Store using Playwright. 🛒[m
+  [m
+  ---[m
+  [m
+[32m++<<<<<<< HEAD[m
+[32m +Test Coverage[m
+[32m++=======[m
+[32m+ ## Test Coverage[m
+[32m++>>>>>>> 6b1ae1c (Update test files and documentation)[m
+  [m
+  Authentication:[m
+  - Login with valid credentials[m
+[36m@@@ -39,7 -39,7 +47,11 @@@[m [mPrice Calculation[m
+  [m
+  ---[m
+  [m
+[32m++<<<<<<< HEAD[m
+[32m +Tools and Technologies Used[m
+[32m++=======[m
+[32m+ ## Tools and Technologies Used[m
+[32m++>>>>>>> 6b1ae1c (Update test files and documentation)[m
+  [m
+  Playwright + Playwright Test Runner[m
+  [m
+[36m@@@ -49,9 -49,8 +61,16 @@@[m [mEditor: VS Code or any modern JS ID[m
+  [m
+  ---[m
+  [m
+[32m++<<<<<<< HEAD[m
+[32m +Running the Tests[m
+[32m++=======[m
+[32m+ ## Running the Tests[m
+[32m++>>>>>>> 6b1ae1c (Update test files and documentation)[m
+  [m
+  ```bash[m
+  npm install[m
+  npx playwright test[m
+[32m++<<<<<<< HEAD[m
+[32m +[m
+[32m++=======[m
+[32m++>>>>>>> 6b1ae1c (Update test files and documentation)[m

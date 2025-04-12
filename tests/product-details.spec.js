@@ -8,15 +8,19 @@ test.describe('Swag Labs Product Info Checks (POM)', () => {
     loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login('standard_user', 'secret_sauce');
+    await page.waitForSelector('.inventory_item');
   });
 
   test('Each product shows name, price, and image', async ({ page }) => {
-    const items = await page.$$('.inventory_item');
+    const items = page.locator('.inventory_item');
+    const count = await items.count();
 
-    for (const item of items) {
-      expect(await item.locator('.inventory_item_name').isVisible()).toBe(true);
-      expect(await item.locator('.inventory_item_price').isVisible()).toBe(true);
-      expect(await item.locator('img.inventory_item_img').getAttribute('src')).not.toBeNull();
+    for (let i = 0; i < count; i++) {
+      const item = items.nth(i);
+      await expect(item.locator('.inventory_item_name')).toBeVisible();
+      await expect(item.locator('.inventory_item_price')).toBeVisible();
+      const imgSrc = await item.locator('img.inventory_item_img').getAttribute('src');
+      expect(imgSrc).not.toBeNull();
     }
   });
 });

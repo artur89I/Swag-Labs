@@ -13,11 +13,13 @@ test.describe('Swag Labs Cart Flow (POM)', () => {
 
     await loginPage.goto();
     await loginPage.login('standard_user', 'secret_sauce');
+    await page.waitForSelector('.inventory_item');
   });
 
   test('Add a random item to the cart', async ({ page }) => {
-    const buttons = await page.$$('[data-test^="add-to-cart"]');
-    await buttons[Math.floor(Math.random() * buttons.length)].click();
+    const addButtons = await page.$$('[data-test^="add-to-cart"]');
+    const randomIndex = Math.floor(Math.random() * addButtons.length);
+    await addButtons[randomIndex].click();
 
     await inventoryPage.goToCart();
     const cartItems = await page.$$('.cart_item');

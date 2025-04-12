@@ -8,8 +8,10 @@ test.describe('Swag Labs Sorting Tests (POM)', () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     inventoryPage = new InventoryPage(page);
+
     await loginPage.goto();
     await loginPage.login('standard_user', 'secret_sauce');
+    await inventoryPage.waitForLoaded();
   });
 
   test('Sort by Name: A to Z', async ({ page }) => {
@@ -28,14 +30,18 @@ test.describe('Swag Labs Sorting Tests (POM)', () => {
 
   test('Sort by Price: Low to High', async ({ page }) => {
     await inventoryPage.sortBy('lohi');
-    const prices = await page.$$eval('.inventory_item_price', els => els.map(el => parseFloat(el.textContent.replace('$', ''))));
+    const prices = await page.$$eval('.inventory_item_price', els =>
+      els.map(el => parseFloat(el.textContent.replace('$', '')))
+    );
     const sorted = [...prices].sort((a, b) => a - b);
     expect(prices).toEqual(sorted);
   });
 
   test('Sort by Price: High to Low', async ({ page }) => {
     await inventoryPage.sortBy('hilo');
-    const prices = await page.$$eval('.inventory_item_price', els => els.map(el => parseFloat(el.textContent.replace('$', ''))));
+    const prices = await page.$$eval('.inventory_item_price', els =>
+      els.map(el => parseFloat(el.textContent.replace('$', '')))
+    );
     const sorted = [...prices].sort((a, b) => b - a);
     expect(prices).toEqual(sorted);
   });
