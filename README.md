@@ -1,10 +1,10 @@
-# Swag Labs Store - Playwright JavaScript Project 👩🏻‍💻
+Swag Labs Store - Playwright JavaScript Project 👩🏻‍💻
 
 This project is designed to test functionalities of the Swag Labs Store using Playwright. 🛒
 
 ---
 
-## Test Coverage
+Test Coverage
 
 Authentication:
 - Login with valid credentials
@@ -39,7 +39,7 @@ Price Calculation:
 
 ---
 
-## Tools and Technologies Used
+Tools and Technologies Used
 
 Playwright + Playwright Test Runner
 
@@ -49,8 +49,9 @@ Editor: VS Code or any modern JS IDE
 
 ---
 
-## Running the Tests
+Running the Tests
 
 ```bash
 npm install
 npx playwright test
+
