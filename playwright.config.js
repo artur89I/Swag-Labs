@@ -22,15 +22,14 @@ export default defineConfig({
       name: 'chromium',
       use: { browserName: 'chromium' },
     },
-    // Optional:
-    // {
-    //   name: 'firefox',
-    //   use: { browserName: 'firefox' },
-    // },
-    // {
-    //   name: 'webkit',
-    //   use: { browserName: 'webkit' },
-    // },
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' },
+    },
+    {
+      name: 'webkit',
+      use: { browserName: 'webkit' },
+    },
   ],
   outputDir: 'test-results/',
 });
